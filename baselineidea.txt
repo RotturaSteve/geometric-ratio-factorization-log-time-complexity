@@ -1,0 +1,85 @@
+The Rottura Algorithms, #4, factoring in O(t+log(sqrt(N))) time; where t is the tile size < 65k; lattice factorization in polar coordinates; TOPIC O(1) FACTORING O(LOG(N)) FACTORING: Breaks RSA,Elliptic-Curve,Lattice,etc; probably Solves Gauss Circle Problem,etc, will break LWE because it's a lattice crack used to factor; 
+    
+
+beyond dynamical recognition of cyclotomic integers via geomettric exhaustion but actual factoring
+as we reveal the minimal rotational symmetry order Q that the circle "wants" to be approximated by under constraints.
+also as a prime-detector.
+
+    
+printf("Target %lu factors %lu and %lu\n",NN,PP,QQ);
+
+P = PP; Q = QQ; N = NN;
+
+RR = R = sqrtl( N / M_PIl );
+
+printf("Circle area radius to contain %lu is %.7Lf\n",NN,RR);
+
+
+
+N = A = M_PIl * (R * R);
+
+A = ( (Q*L) * sqrtl( ((R+x)*(R+x)) - ((L/2.0)*(L/2.0)) ) ) / 2.0;
+
+// N = Q*P as N is any target whole positive, like 187 is an example that would have Q == 17 and P == 11 once solved to whole positives
+// we're having a polygon storing the same area as a circle at the same origin
+// and we're traversing only L, with constant area N therefore constant circle radius R = sqrt(N/PI), but (R+x) is the larger radius of the polygon
+// as we're maintaining a polygon with side length L at circle origin;
+//
+// one of our goals is to not know anything other than N but also traverse L, the side-length of a polygon that'd contain area N,
+// while knowing that polygon inscribed at an area circle containing area N could be seen as an approximation of that circle,
+// but with a larger radius; We know only N, and if possible traverse only L, as in our initial setup, here::
+//
+// R = sqrt(N/PI) : radius of a circle which could contain the whole positive area N ;
+// Q : number of polygon sides, which is NOT known but to be discovered
+// L : polygon side lengths, which is NOT known but to be discovered
+// N == ( QL*sqrt( (R+x)^2 - (L/2)^2 ) ) / 2 ; there is a polygon of Q sides of L length area whose area at radius R+x which can contain the area of the cirle which does so at radius R
+// Q = ((2 * PI * R^2)/L) / sqrt((R+x)^2 - (L/2)^2)
+// x = sqrt( ((2 * PI * R^2) / QL )^2 + (L/2)^2 ) - R :==:
+// x == sqrt ( ( (L*sqrt((R+x)^2-(L/2.0)^2)) / (2*PI*R^2) )^2 + (L/2)^2 ) - R;  // x only in terms of L (NOTICE) 
+// P == 0.5 * L * sqrt ( (R+x)^2 - (L/2.0)^2 ) ==N/Q  :: arc area of polygon radius > circle radius composite isosceles ;
+// P, via arc area: P=(1/Q​)*PI*R^2 == 0.5 * R^2 * (theta=2PI/Q) == (PI*R^2)/Q; // .5 * R^2 theta == arc area ;;
+//   @ solution:    PI * R^2 == (Q*L^2) / ( 4 * tan ( PI / Q ) )
+//      &&   Q == PI / ( arcsin ( L / (2 * R )) )
+//
+// N gets you R, then traversing for L gets you x, which gets you Q; which gets you P.
+// to complete this model setup, we're noting that traversing L about R is monotonic, so would be a traversal to find Q...
+// and that these don't have to be fractional in fact Q won't be for sure... L might be fractional, but not Q then later not P.
+//    
+// There is NOT more than one whole positive number Q discovered by traversing L, and L doesn't require other traversal, and L traversal is monotonic.
+// we are therefore NOT representing the final factored form but strictly producing it by traversing L to solution monotonic binary-searchable traversal, log time complexity, period.
+// the circle area and its radius are constant and constrain the polygon model's progress monotonically traversing to area on L throughout.
+//
+// notice that you CAN binary-search fractional values in log time complexity for sure, if you have to convert them to magnitudes outright while operating.
+// notice: compressing the otherwise uncompressible is storing any such found even if by operating on source-data to make it thus,
+//          is by storing only 'x' and 'L' and at worse "salt multiplier making unsavvy segments true";
+// notice: Q being composite doesn't matter, you can find all factors recursing recursions which are themselves log time complexity.
+// notice: also is cyclotomic integer generator, prime-detector, etc., etc., etc. different than but useful on Kronecker–Weber & the Gauss Circle Problem, FFTs, etc;
+// notice: of course use something like C's mpfr;
+// note also: the total area remains constant, we're not adjusting to match area, we're traversing L so make the polygon always contain the area.
+// fyi; thinking how eventually ratio floor P isosceles area to floor Q number of subdivisions ratio sqrt(N/ratio) == factor;
+
+    
+    (harder but lattice side-channel is also speculated to work)
+    
+alternatively:    
+    
+    an area N whole positive to be factored being all you know determines a fractional radius R
+    which experiences diophantine integerization descritization problems containing the whole number N
+    number of computer-screen-like cartesian plots from the outset, therefore we square-scale R
+    in a judicious manner imposing this scaling on a tiled grid centered at origin because
+    we know that we can deterministically choose such a scaled radius R, 
+    ensuring that the original R number of 'tiles' will extend in a horizontal line to the circle's right perimeter;
+    At this point we know that we can test sample scales of R to get R number of tiles between origin and perimeter;
+    Now what we want is to discover a scaling which provides a 'frontier' of tiles confronting the circle's perimeter;
+    This will be the interaction between problems with R being a fraction as a radius meant to contain a whole N area
+    as well as the interaction between the scaling of the tiles our real fractional circle plots overlay
+    including the first integerization issue of merely using whole coordinates in the first place...
+    Now, by walking the confrontation of the tiles and the circle-perimeter we deterministically discretely 'learn'
+    a new scaling which would cause recognizable features to present themselves where the tiles are discriminated
+    for being within or outside the distance R math-wise (fractional) and scaled-wise (integerized)...
+    There we learn the scaling which would expose the intersection of tiles as a 'frontier' against the arc,
+    presenting a recognizable point where the arc-area must be whole on clockwise traversals...
+    This results in being able to respond to which features of tile intersection with circle-perimeter
+    we aught use for a binary-searchable range containing the area-factor.
+
+
