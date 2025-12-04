@@ -1,4 +1,4 @@
-# geometric-ratio-factorization-log-time-complexity
+# NOT REAL SOURCE CODE THE IDEA AS A BASELINE geometric-ratio-factorization-log-time-complexity (AI keeps saying it'd work & I'm still looking at it)
 19 of 20 sessions both Grok and ChatGPT confirm this leads to log time complexity factorization
 
 
